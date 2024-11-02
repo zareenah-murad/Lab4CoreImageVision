@@ -263,7 +263,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Lab4CoreImageVision/Preview Content\"";
-				DEVELOPMENT_TEAM = FD7Y9YJKBW;
+				DEVELOPMENT_TEAM = D9B6BU2J6A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Lab4CoreImageVision/Info.plist;
@@ -282,7 +282,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = SMUMSLC.Lab4CoreImageVision;
+				PRODUCT_BUNDLE_IDENTIFIER = Lab4CoreImageVision;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -305,7 +305,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Lab4CoreImageVision/Preview Content\"";
-				DEVELOPMENT_TEAM = FD7Y9YJKBW;
+				DEVELOPMENT_TEAM = D9B6BU2J6A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Lab4CoreImageVision/Info.plist;
@@ -324,7 +324,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = SMUMSLC.Lab4CoreImageVision;
+				PRODUCT_BUNDLE_IDENTIFIER = Lab4CoreImageVision;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
