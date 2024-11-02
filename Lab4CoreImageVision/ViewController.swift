@@ -158,8 +158,7 @@ class ViewController: UIViewController {
         self.detectedHandRectangleShapeLayer = handRectangleShapeLayer
         print("Vision drawing layers set up successfully")
     }
-
-    // Function to update the overlay with detected hand points and bounding box
+    
     fileprivate func updateHandOverlay(observations: [VNHumanHandPoseObservation]) {
         guard let handRectangleShapeLayer = self.detectedHandRectangleShapeLayer else {
             print("Detected hand rectangle shape layer not initialized")
@@ -167,9 +166,6 @@ class ViewController: UIViewController {
         }
         
         let handPath = CGMutablePath()
-        let overlayLayer = CALayer()
-        
-        // Clear previous sublayers in the overlay layer
         self.detectedHandRectangleShapeLayer?.sublayers?.forEach { $0.removeFromSuperlayer() }
         
         print("Received \(observations.count) observations")
@@ -180,6 +176,8 @@ class ViewController: UIViewController {
                 let wristPoint = try hand.recognizedPoint(.wrist)
                 let indexTip = try hand.recognizedPoint(.indexTip)
                 let pinkyTip = try hand.recognizedPoint(.littleTip)
+                let middleTip = try hand.recognizedPoint(.middleTip)
+                let ringTip = try hand.recognizedPoint(.ringTip)
 
                 print("Wrist point: \(wristPoint), Index tip: \(indexTip), Pinky tip: \(pinkyTip)")
 
@@ -205,8 +203,22 @@ class ViewController: UIViewController {
                 
                 let boundingBox = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
                 print("Calculated bounding box: \(boundingBox)")
-
                 handPath.addRect(boundingBox)
+                
+                // Gesture classification
+                let gesture = classifyHandGesture(wristPoint: wristPoint, indexTip: indexTip, middleTip: middleTip, ringTip: ringTip, pinkyTip: pinkyTip)
+                print("Detected gesture: \(gesture ?? "Unknown")")
+                
+                // Display gesture classification result as a text overlay
+                let textLayer = CATextLayer()
+                textLayer.string = "Gesture: \(gesture ?? "Unknown")"
+                textLayer.fontSize = 18
+                textLayer.foregroundColor = UIColor.yellow.cgColor
+                textLayer.position = CGPoint(x: self.view.bounds.midX, y: 40)
+                textLayer.alignmentMode = .center
+                textLayer.bounds = CGRect(x: 0, y: 0, width: 200, height: 30)
+                self.detectedHandRectangleShapeLayer?.addSublayer(textLayer)
+                
             } catch {
                 print("Error retrieving hand points: \(error)")
             }
@@ -216,6 +228,37 @@ class ViewController: UIViewController {
             handRectangleShapeLayer.path = handPath
             print("Bounding box path updated")
         }
+    }
+
+    fileprivate func classifyHandGesture(wristPoint: VNRecognizedPoint, indexTip: VNRecognizedPoint, middleTip: VNRecognizedPoint, ringTip: VNRecognizedPoint, pinkyTip: VNRecognizedPoint) -> String? {
+        // Calculate distances from wrist to each fingertip
+        let indexDistance = distance(from: wristPoint.location, to: indexTip.location)
+        let middleDistance = distance(from: wristPoint.location, to: middleTip.location)
+        let ringDistance = distance(from: wristPoint.location, to: ringTip.location)
+        let pinkyDistance = distance(from: wristPoint.location, to: pinkyTip.location)
+        
+        // Print out the distances for debugging
+        print("Debugging Distances - Index: \(indexDistance), Middle: \(middleDistance), Ring: \(ringDistance), Pinky: \(pinkyDistance)")
+        
+        // Heuristics for Rock, Paper, Scissors
+        if indexDistance < 0.2 && middleDistance < 0.2 && ringDistance < 0.2 && pinkyDistance < 0.2 {
+            print("Detected Gesture: Rock")
+            return "Rock" // All fingers close to the palm
+        } else if indexDistance > 0.25 && middleDistance > 0.25 && ringDistance > 0.25 && pinkyDistance > 0.25 {
+            print("Detected Gesture: Paper")
+            return "Paper" // All fingers extended (or mostly extended)
+        } else if indexDistance > 0.3 && middleDistance > 0.3 && ringDistance < 0.25 && pinkyDistance < 0.25 {
+            print("Detected Gesture: Scissors")
+            return "Scissors" // Index and middle extended, ring and pinky curled
+        }
+        
+        print("Detected Gesture: Unknown")
+        return "Unknown"
+    }
+
+    // Helper function to calculate the distance between two points
+    fileprivate func distance(from point1: CGPoint, to point2: CGPoint) -> CGFloat {
+        return sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
     }
 
     // Helper function to add circles and labels at specific points
